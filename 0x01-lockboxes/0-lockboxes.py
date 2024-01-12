@@ -1,4 +1,11 @@
+#!/usr/bin/python3
+'''module for lockbixes.
+'''
+
+
 def canUnlockAll(boxes):
+    '''Creates a function for lockboxer.
+    ''' 
     if not boxes or len(boxes) == 0:
         return False
 
