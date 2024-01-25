@@ -5,6 +5,7 @@ Reads stdin line by line and computes metrics.
 
 import sys
 
+
 def print_metrics(total_size, status_codes):
     """
     Prints the computed metrics.
@@ -13,12 +14,15 @@ def print_metrics(total_size, status_codes):
     for code in sorted(status_codes.keys()):
         print("{}: {}".format(code, status_codes[code]))
 
+
 def main():
     """
     Main function to compute and print metrics.
     """
     total_size = 0
-    status_codes = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0, '404': 0, '405': 0, '500': 0}
+    status_codes = {'200': 0, '301': 0, '400': 0,
+                    '401': 0, '403': 0, '404': 0,
+                    '405': 0, '500': 0}
 
     try:
         for i, line in enumerate(sys.stdin, 1):
@@ -37,4 +41,3 @@ def main():
         pass
 
     print_metrics(total_size, status_codes)
-
