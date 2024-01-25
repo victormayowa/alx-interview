@@ -6,42 +6,39 @@ Reads stdin line by line and computes metrics.
 import sys
 
 
-def print_metrics(total_size, status_codes):
-    """
-    Prints the computed metrics.
-    """
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        print("{}: {}".format(code, status_codes[code]))
+def print_stats():
+    '''Prints accumulated statistics.'''
+    print("File size: {}".format(size[0]))
+    for k in sorted(codes.keys()):
+        if codes[k]:
+            print("{}: {}".format(k, codes[k]))
 
 
-def main():
-    """
-    Main function to compute and print metrics.
-    """
-    total_size = 0
-    status_codes = {'200': 0, '301': 0, '400': 0,
-                    '401': 0, '403': 0, '404': 0,
-                    '405': 0, '500': 0}
-
+def check_match(line):
+    '''Checks for regexp match in line.'''
     try:
-        for i, line in enumerate(sys.stdin, 1):
-            parts = line.split()
-            if len(parts) >= 9:
-                status_code = parts[-2]
-                file_size = parts[-1]
-                if status_code in status_codes:
-                    total_size += int(file_size)
-                    status_codes[status_code] += 1
-
-            if i % 10 == 0:
-                print_metrics(total_size, status_codes)
-
-    except KeyboardInterrupt:
+        line = line[:-1]
+        words = line.split(" ")
+        size[0] += int(words[-1])
+        code = int(words[-2])
+        if code in codes:
+            codes[code] += 1
+    except:
         pass
-
-    print_metrics(total_size, status_codes)
 
 
 if __name__ == "__main__":
-    main()
+    size = [0]
+    codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+    i = 1
+    try:
+        for line in sys.stdin:
+            check_match(line)
+            if i % 10 == 0:
+                print_stats()
+            i += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()
