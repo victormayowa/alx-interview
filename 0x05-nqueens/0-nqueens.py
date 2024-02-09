@@ -33,7 +33,8 @@ def solve_n_queens_util(board, col, solutions):
     Recursive utility function to solve N Queens problem
     """
     if col >= len(board):
-        solutions.append([[row, col] for row, val in enumerate(board) if val == 1])
+        solutions.append([[row, col] for row,
+                         val in enumerate(board) if val == 1])
         return
 
     for i in range(len(board)):
