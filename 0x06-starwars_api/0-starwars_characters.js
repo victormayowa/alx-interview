@@ -1,29 +1,32 @@
 #!/usr/bin/node
 
 const request = require('request');
+const utility = require('util');
 
-const movieId = process.argv[2];
+const MOVIE = process.argv[2];
+const URL = `https://swapi-api.alx-tools.com/api/films/${MOVIE}`;
 
-const apiUrl = `https://swapi.dev/api/films/${movieId}/`;
+const get = utility.promisify(request.get);
 
-request(apiUrl, (error, response, body) => {
-  if (error) {
-    console.error('Error:', error);
-  } else if (response.statusCode !== 200) {
-    console.error('Unexpected status code:', response.statusCode);
-  } else {
-    const movieData = JSON.parse(body);
-    movieData.characters.forEach((characterUrl) => {
-      request(characterUrl, (error, response, body) => {
-        if (error) {
-          console.error('Error:', error);
-        } else if (response.statusCode !== 200) {
-          console.error('Unexpected status code:', response.statusCode);
-        } else {
-          const characterData = JSON.parse(body);
-          console.log(characterData.name);
-        }
-      });
+request.get(URL, async (err, res) => {
+  if (err) {
+    return;
+  }
+  const characters = await JSON.parse(res.body).characters;
+  await printCharacters(characters);
+});
+
+async function printCharacters (characters) {
+  const charList = [];
+
+  for (const charUri of characters) {
+    await get(charUri).then(res => {
+      const character = JSON.parse(res.body);
+      charList.push(character.name);
     });
   }
-});
+
+  for (const char of charList) {
+    console.log(char);
+  }
+}
