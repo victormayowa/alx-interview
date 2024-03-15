@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+"Prime Numbe Games"
+
+
 def is_prime(num):
     """
     Check if a number is prime.
@@ -9,6 +13,7 @@ def is_prime(num):
             return False
     return True
 
+
 def get_primes(n):
     """
     Get all prime numbers up to n.
@@ -18,6 +23,7 @@ def get_primes(n):
         if is_prime(num):
             primes.append(num)
     return primes
+
 
 def can_win(nums):
     """
@@ -34,6 +40,7 @@ def can_win(nums):
     for move in moves:
         xor ^= move
     return xor != 0
+
 
 def isWinner(x, nums):
     """
